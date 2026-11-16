@@ -14,23 +14,26 @@ from utils import read_video, make_prediction_batch, make_track_batch, video_rea
 
 def extract(url_video):
     
-    inicio = time.time()
     # ──────── Variables and initialization ────────────────────────────────────
     BATCH_SIZE = 16
+    
     cap, _, _, _  = read_video(url_video)
+    
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
-    player_model = YOLO(config.PLAYER_POSE_MODEL, task='pose')
-    ball_model = YOLO(config.BALL_MODEL, task='detect')
+    #player_model = YOLO(config.PLAYER_POSE_MODEL, task='pose')
+    #ball_model = YOLO(config.BALL_MODEL, task='detect')
 
-    player_tracker = PlayerTracker()
-    ball_tracker = BallTracker()
+    #player_tracker = PlayerTracker()
+    #ball_tracker = BallTracker()
 
-    keypoints_court = KeypointsCourt()
+    #keypoints_court = KeypointsCourt()
 
     queue = Queue(maxsize=150)
     frames_thread = Thread(target=video_reader, args=(cap, queue))
+    inicio = time.perf_counter()
     frames_thread.start()
+    """
     # ───────────────────────────────────────────────────────
     
     is_first_frame = True
@@ -118,13 +121,9 @@ def extract(url_video):
     output_path = os.path.join(config.RAW_JSON_FOLDER_PATH, f"{video_name}.json")
     with open(output_path, 'w') as f:
         json.dump(detection, f, cls=config.NumpyEncoder, indent=2)
-
-    fin = time.time()   
+"""
+    frames_thread.join()
+    fin = time.perf_counter()
     total = fin - inicio
-    print(f"Tiempo -> {total:.6f} segundos")
-    print(f"Extraccion finalizada! Raw Data guardada en {output_path}")
-    
-
-
-
-
+    print(f"Tiempo de leer todo el vídeo -> {total:.3f} segundos")
+    ###print(f"Extraccion finalizada! Raw Data guardada en {output_path}")

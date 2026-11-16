@@ -21,10 +21,10 @@ def video_reader(cap, queue):
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
-            queue.put((-1, None))
+            #queue.put((-1, None))
             break
 
-        queue.put((frame_idx, frame))
+        #queue.put((frame_idx, frame))
         frame_idx += 1
 
 def obtain_court_lines(img, best_contour):
