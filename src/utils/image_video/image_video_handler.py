@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import config
+import time
 
 def read_video(path_video):
     cap = cv2.VideoCapture(path_video)
@@ -18,13 +19,22 @@ def close_window():
 def video_reader(cap, queue):
     print("Leyendo video\n")
     frame_idx = 1
+    total_read_t0 = time.perf_counter()
+    wait_read = 0.0
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
-            #queue.put((-1, None))
+            w0 = time.perf_counter()
+            queue.put((-1, None))
+            wait_read += time.perf_counter() - w0
+            total_read_time = time.perf_counter() - total_read_t0
+            real_read_time = total_read_time - wait_read
+            print(f"Tiempo total de la función lectura: {total_read_time:.3f}")
+            print(f"Tiempo real de lectura: {real_read_time:.3f}")
             break
-
-        #queue.put((frame_idx, frame))
+        w0 = time.perf_counter()
+        queue.put((frame_idx, frame))
+        wait_read += time.perf_counter() - w0
         frame_idx += 1
 
 def obtain_court_lines(img, best_contour):

@@ -1,4 +1,4 @@
-# Python - compilatión y caché
+# Python - compilación y caché
 __pycache__/
 *.py[cod]
 *$py.class
